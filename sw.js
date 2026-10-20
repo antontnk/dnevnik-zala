@@ -1,7 +1,7 @@
 // Офлайн-режим: сам дневник берётся из сети, если она есть (так приходят обновления), иначе из кэша.
 // Шрифты кэшируются при первом открытии и дальше грузятся с телефона.
-const CACHE = 'dnevnik-zala-v2';
-const CORE = ['./', './index.html', './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png', './icons/apple-touch-icon.png'];
+const CACHE = 'dnevnik-zala-v3';
+const CORE = ['./', './index.html', './app.js', './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png', './icons/apple-touch-icon.png'];
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(CORE)).then(() => self.skipWaiting()));
