@@ -267,9 +267,9 @@ section{display:flex;flex-direction:column;gap:12px}
 /* tab bar */
 .tabbar{position:fixed;left:0;right:0;bottom:0;z-index:15;background:var(--tab);-webkit-backdrop-filter:saturate(1.6) blur(18px);backdrop-filter:saturate(1.6) blur(18px);
   border-top:1px solid var(--line);padding:6px max(8px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(8px,env(safe-area-inset-left,0px))}
-.tabbar-in{max-width:720px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr)}
-.tab{border:0;background:none;display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 0;font-size:11px;font-weight:500;color:var(--muted)}
-.tab svg{width:26px;height:26px}
+.tabbar-in{max-width:720px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr)}
+.tab{border:0;background:none;display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 0;font-size:10.5px;font-weight:500;color:var(--muted);min-width:0}
+.tab svg{width:25px;height:25px}
 .tab[aria-selected="true"]{color:var(--accent)}
 
 /* sheets */
@@ -326,6 +326,99 @@ label.f{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--mu
 .pr-item span i{font-style:normal;color:var(--muted);text-decoration:line-through;margin-right:6px}
 .pr-acts{display:flex;flex-direction:column;gap:8px;width:100%;animation:rise .5s .45s var(--ease) both}
 
+/* v3: templates, supersets, rpe, tools */
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:8px 14px;font-size:14px;font-weight:500;display:inline-flex;align-items:center;gap:6px}
+.chip svg{width:16px;height:16px;color:var(--accent)}
+.chip.on{background:var(--accent);color:var(--accent-ink);border-color:transparent}
+.tpl-bar{display:flex;flex-direction:column;gap:8px}
+.inline-form{display:flex;gap:8px}
+.inline-form .inp{flex:1}
+.row-extra{display:grid;grid-template-columns:168px minmax(0,1fr);gap:8px}
+.wk li.ssw{display:block}
+.row-tools{display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+.row-tools .link{font-size:12px}
+.warm{font-size:12px;color:var(--muted);background:var(--soft);border-radius:8px;padding:6px 9px;font-family:var(--f-mono)}
+.ss-on{border-left:4px solid var(--accent);border-top-left-radius:6px;border-bottom-left-radius:6px}
+.ssg{border-left:3px solid var(--accent);padding-left:9px;margin-left:-2px;display:flex;flex-direction:column;gap:4px}
+.ssg-l{font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--accent)}
+.rpe{font-size:11px;color:var(--muted);font-family:var(--f-mono);margin-left:6px}
+.note-t{font-size:12px;color:var(--muted);font-style:italic}
+.badge.plat{background:var(--g-back);color:#1A1400}
+.fc{display:flex;flex-direction:column;gap:4px;background:color-mix(in srgb,var(--gc) 10%,var(--surface));border:1px solid color-mix(in srgb,var(--gc) 30%,var(--line));border-radius:12px;padding:10px 12px}
+.fc small{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.fc b{font-weight:600}
+.fc span{font-size:13px;color:var(--muted)}
+.plat-list{display:flex;flex-direction:column;gap:10px}
+.plat-it{display:flex;flex-direction:column;gap:6px;padding-top:10px;border-top:1px solid var(--line)}
+.plat-it:first-child{border-top:0;padding-top:0}
+.plat-it b{font-weight:600}
+.plat-it ul{margin:0;padding-left:18px;font-size:13px;color:var(--muted);display:flex;flex-direction:column;gap:3px}
+/* plates calculator */
+.bar-viz svg{width:100%;height:auto;display:block}
+.plates-out{display:flex;flex-direction:column;gap:6px;font-size:14px}
+.plates-out b{font-family:var(--f-display);font-size:20px}
+.pl-chips{display:flex;gap:6px;flex-wrap:wrap}
+.pl-chip{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:7px 10px;font-family:var(--f-mono);font-size:13px}
+.pl-chip[aria-pressed="false"]{opacity:.45;text-decoration:line-through}
+/* month summary */
+.mon-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.mon-head b{font-family:var(--f-display);font-weight:500;font-size:16px}
+.mon-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.mon-tile{background:var(--soft);border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.mon-tile b{font-family:var(--f-display);font-weight:700;font-size:20px;font-variant-numeric:tabular-nums;line-height:1.15}
+.mon-tile span{font-size:12px;color:var(--muted);line-height:1.3}
+.mon-best{font-size:14px;line-height:1.45}
+.mon-best b{font-weight:600}
+.split{display:flex;height:10px;border-radius:99px;overflow:hidden;background:var(--soft)}
+.split i{display:block;height:100%}
+.split-leg{display:flex;gap:10px;flex-wrap:wrap;font-size:12px;color:var(--muted)}
+.split-leg span{display:inline-flex;align-items:center;gap:5px}
+.split-leg span::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--gc)}
+/* body */
+.body-hero{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.body-hero b{font-family:var(--f-display);font-weight:700;font-size:40px;line-height:1;font-variant-numeric:tabular-nums}
+.meas{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.meas div{background:var(--soft);border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:1px}
+.meas small{font-size:12px;color:var(--muted)}
+.meas b{font-family:var(--f-mono);font-size:17px;font-weight:500}
+.meas i{font-style:normal;font-size:12px}
+.bw svg{width:100%;height:auto;display:block}
+.strength{display:flex;flex-direction:column;gap:12px}
+.st-row{display:flex;flex-direction:column;gap:6px}
+.st-top{display:flex;justify-content:space-between;gap:10px;align-items:baseline;font-size:14px}
+.st-top b{font-weight:600}
+.st-top span{font-family:var(--f-mono);font-size:13px;white-space:nowrap}
+.st-scale{position:relative;height:8px;border-radius:99px;background:linear-gradient(to right,var(--soft),color-mix(in srgb,var(--accent) 60%,var(--soft)))}
+.st-scale i{position:absolute;top:50%;width:16px;height:16px;border-radius:50%;background:var(--accent);border:3px solid var(--surface);transform:translate(-50%,-50%)}
+.st-ticks{display:flex;justify-content:space-between;font-size:11px;color:var(--muted)}
+.lvl{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)}
+.ph-cmp{position:relative;width:100%;aspect-ratio:3/4;max-width:100%;border-radius:14px;overflow:hidden;background:var(--soft);touch-action:none;user-select:none;-webkit-user-select:none}
+.ph-cmp img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none}
+.ph-cmp .after{clip-path:inset(0 0 0 var(--cut,50%))}
+.ph-cmp .handle{position:absolute;top:0;bottom:0;left:var(--cut,50%);width:3px;background:#fff;transform:translateX(-50%);box-shadow:0 0 6px rgba(0,0,0,.4)}
+.ph-cmp .handle::after{content:"‹ ›";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:38px;height:38px;border-radius:50%;background:#fff;color:#111;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700}
+.ph-lbl{position:absolute;bottom:10px;padding:4px 9px;border-radius:8px;background:rgba(0,0,0,.6);color:#fff;font-size:12px}
+.ph-sel{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.thumbs{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px}
+.thumbs img{width:64px;height:84px;object-fit:cover;border-radius:10px;flex:none;background:var(--soft)}
+.b-list{display:flex;flex-direction:column}
+.b-row{display:flex;justify-content:space-between;gap:10px;padding:11px 0;border-top:1px solid var(--line);font-size:14px;cursor:pointer;background:none;border-left:0;border-right:0;border-bottom:0;width:100%;text-align:left}
+.b-row:first-child{border-top:0;padding-top:0}
+.b-row span:last-child{font-family:var(--f-mono);color:var(--muted);font-size:13px;text-align:right}
+.photo-in{display:flex;gap:10px;align-items:center}
+.photo-in img{width:56px;height:74px;object-fit:cover;border-radius:8px}
+/* compare */
+.cmp-row{display:flex;flex-direction:column;gap:6px;padding:12px 0;border-top:1px solid var(--line)}
+.cmp-row:first-child{border-top:0;padding-top:0}
+.cmp-bars{display:grid;grid-template-columns:64px minmax(0,1fr) auto;gap:6px 10px;align-items:center;font-size:12px}
+.cmp-bars .tr{height:10px;border-radius:99px;background:var(--soft);overflow:hidden}
+.cmp-bars .tr i{display:block;height:100%;border-radius:99px}
+.cmp-bars .v{font-family:var(--f-mono);font-size:12px;white-space:nowrap}
+.cmp-sum{display:grid;grid-template-columns:auto 1fr 1fr;gap:6px 12px;font-size:14px}
+.cmp-sum .h{font-size:12px;color:var(--muted);font-weight:600}
+.cmp-sum .n{font-family:var(--f-mono);text-align:right}
+
 .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(84px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:12px;font-size:14px;z-index:70;max-width:calc(100% - 32px);text-align:center;box-shadow:0 6px 20px rgba(0,0,0,.2)}
 @media (min-width:640px){
   .cards{grid-template-columns:repeat(2,minmax(0,1fr))}
@@ -340,7 +433,7 @@ label.f{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--mu
 <div class="app">
   <div class="notice view-b" id="view-banner" hidden>
     <p id="view-text"></p>
-    <div class="acts"><button class="btn sm" id="view-import" type="button">Добавить к моим</button><button class="btn sm ghost" id="view-close" type="button">Вернуться к своим</button></div>
+    <div class="acts"><button class="btn sm" id="view-compare" type="button">Сравнить со мной</button><button class="btn sm ghost" id="view-import" type="button">Добавить к моим</button><button class="btn sm ghost" id="view-close" type="button">Вернуться к своим</button></div>
   </div>
 
   <!-- TODAY -->
@@ -364,6 +457,7 @@ label.f{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--mu
       <button class="btn" id="add" type="button">Записать тренировку</button>
       <button class="btn ghost" id="paste-open" type="button">Из заметок</button>
     </div>
+    <div class="tpl-bar" id="tpl-bar" hidden><span class="hint">Начать по шаблону — веса подставятся с прошлого раза</span><div class="chips" id="tpl-chips"></div></div>
     <section id="last-sec">
       <div class="sec-head"><h2>Последняя тренировка</h2><button class="link" type="button" data-goto="history">Вся история</button></div>
       <div id="last-wk"></div>
@@ -389,6 +483,10 @@ label.f{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--mu
   <main class="view" id="v-progress" hidden>
     <div class="vhead"><div class="vhead-t"><div class="eyebrow" id="prog-sub">Прогресс и рекорды</div><h1>Прогресс</h1></div></div>
     <div class="stats" id="stats"></div>
+    <section id="plat-sec" hidden>
+      <div class="sec-head"><h2>Плато</h2><span class="hint">3 тренировки без роста 1ПМ</span></div>
+      <div class="card plat-list" id="plat"></div>
+    </section>
     <section>
       <div class="sec-head"><h2>Карта мышц</h2><span class="hint">за 7 дней</span></div>
       <div class="card mmap">
@@ -400,6 +498,13 @@ label.f{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--mu
     <section>
       <div class="sec-head"><h2>Тоннаж по неделям</h2><span class="hint">вес × повторы × подходы</span></div>
       <div class="card ton"><div id="ton-chart"></div><div class="ton-cap" id="ton-cap"></div></div>
+    </section>
+    <section id="month-sec">
+      <div class="sec-head"><h2>Итоги месяца</h2><button class="link" type="button" id="mon-share">Поделиться</button></div>
+      <div class="card" style="display:flex;flex-direction:column;gap:14px">
+        <div class="mon-head"><button class="round-btn" type="button" id="mon-prev" aria-label="Предыдущий месяц"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button><b id="mon-title"></b><button class="round-btn" type="button" id="mon-next" aria-label="Следующий месяц"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+        <div id="mon-body" style="display:flex;flex-direction:column;gap:12px"></div>
+      </div>
     </section>
     <section>
       <div class="sec-head"><h2>Упражнения</h2><span class="hint">1ПМ — расчётный максимум на 1 повтор</span></div>
@@ -423,6 +528,35 @@ label.f{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--mu
     <div id="history" style="display:flex;flex-direction:column;gap:8px"></div>
   </main>
 
+  <!-- BODY -->
+  <main class="view" id="v-body" hidden>
+    <div class="vhead"><div class="vhead-t"><div class="eyebrow">Вес, замеры и фото</div><h1>Тело</h1></div>
+      <button class="round-btn" id="body-add" type="button" aria-label="Добавить замер"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></button></div>
+    <div id="body-empty" class="empty" hidden>Запишите вес тела — появятся график, сила относительно веса и сравнение фото. <br><br><button class="btn sm" type="button" data-body-add>Добавить первый замер</button></div>
+    <section id="body-main">
+      <div class="card" style="display:flex;flex-direction:column;gap:12px">
+        <div class="body-hero"><b id="bw-now"></b><span class="hint" id="bw-delta"></span></div>
+        <div class="bw" id="bw-chart"></div>
+      </div>
+    </section>
+    <section id="meas-sec">
+      <div class="sec-head"><h2>Замеры</h2><span class="hint" id="meas-date"></span></div>
+      <div class="meas" id="meas"></div>
+    </section>
+    <section id="str-sec">
+      <div class="sec-head"><h2>Сила к весу тела</h2><span class="hint" id="str-hint"></span></div>
+      <div class="card strength" id="strength"></div>
+    </section>
+    <section id="photo-sec">
+      <div class="sec-head"><h2>Фото до и после</h2><span class="hint">хранятся только на телефоне</span></div>
+      <div class="card" id="photos" style="display:flex;flex-direction:column;gap:12px"></div>
+    </section>
+    <section id="blog-sec">
+      <div class="sec-head"><h2>Все замеры</h2></div>
+      <div class="card b-list" id="body-log"></div>
+    </section>
+  </main>
+
   <!-- PROFILE -->
   <main class="view" id="v-profile" hidden>
     <div class="vhead"><div class="vhead-t"><div class="eyebrow">Настройки и обмен</div><h1>Профиль</h1></div></div>
@@ -432,6 +566,17 @@ label.f{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--mu
         <label class="f">Подпись на картинках и в ссылке<input class="inp" id="f-owner" placeholder="Например, Антон" maxlength="40" autocomplete="given-name"></label>
         <div class="row2"><span>Цель: тренировок в неделю</span><div class="stepper"><button type="button" id="goal-minus" aria-label="Меньше">−</button><b id="goal-val">3</b><button type="button" id="goal-plus" aria-label="Больше">+</button></div></div>
         <div class="row2"><span>Звук при новом рекорде</span><button class="toggle" id="sound-toggle" type="button" aria-label="Звук при новом рекорде"></button></div>
+        <div class="row2"><span>Ориентиры силы</span><div class="seg" role="group" aria-label="Ориентиры силы"><button type="button" data-std="m">Мужские</button><button type="button" data-std="f">Женские</button></div></div>
+      </div>
+    </section>
+    <section>
+      <div class="sec-head"><h2>Шаблоны тренировок</h2><span class="hint">сохраняются из окна записи</span></div>
+      <div class="list" id="tpl-list"></div>
+    </section>
+    <section>
+      <h2>Инструменты</h2>
+      <div class="list">
+        <button class="li" type="button" id="open-plates"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12h20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><rect x="5" y="6" width="3" height="12" rx="1" fill="none" stroke="currentColor" stroke-width="2"/><rect x="16" y="6" width="3" height="12" rx="1" fill="none" stroke="currentColor" stroke-width="2"/><rect x="8.5" y="8" width="2" height="8" rx="1" fill="none" stroke="currentColor" stroke-width="1.6"/><rect x="13.5" y="8" width="2" height="8" rx="1" fill="none" stroke="currentColor" stroke-width="1.6"/></svg><span><b>Калькулятор блинов</b><small>Какие блины повесить на каждую сторону грифа.</small></span></button>
       </div>
     </section>
     <section>
@@ -451,6 +596,7 @@ label.f{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--mu
       <h2>Резервная копия</h2>
       <div class="list">
         <button class="li" type="button" id="sh-export"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span><b>Сохранить файл</b><small>Данные хранятся только на этом телефоне — сохраняйте копию в «Файлы» или iCloud Drive.</small></span></button>
+        <button class="li" type="button" id="sh-excel"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M4 9h16M4 15h16M10 3v18" fill="none" stroke="currentColor" stroke-width="2"/></svg><span><b>Таблица Excel</b><small>Все подходы, тренировки, рекорды и замеры — для анализа или тренера.</small></span></button>
         <button class="li" type="button" id="sh-import"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15V4M7 9l5-5 5 5M5 20h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span><b>Загрузить файл</b><small>Добавит тренировки из сохранённой копии.</small></span></button>
       </div>
       <input type="file" id="import-file" accept=".json,application/json" hidden>
@@ -464,6 +610,7 @@ label.f{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--mu
     <button class="tab" role="tab" data-tab="today" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="1.9"/><circle cx="12" cy="12" r="4.5" fill="none" stroke="currentColor" stroke-width="1.9"/><circle cx="12" cy="12" r="1.3" fill="currentColor"/></svg>Сегодня</button>
     <button class="tab" role="tab" data-tab="progress" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19h16M6 15l4-5 3 3 5-7" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>Прогресс</button>
     <button class="tab" role="tab" data-tab="history" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.9"/><path d="M4 10h16M9 3v4M15 3v4" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg>История</button>
+    <button class="tab" role="tab" data-tab="body" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="4.8" r="2.3" fill="none" stroke="currentColor" stroke-width="1.9"/><path d="M6 9.5l6 1 6-1M12 10.5v5M12 15.5l-3 5.5M12 15.5l3 5.5" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>Тело</button>
     <button class="tab" role="tab" data-tab="profile" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8.5" r="3.8" fill="none" stroke="currentColor" stroke-width="1.9"/><path d="M4.5 20c0-4 3.4-6.5 7.5-6.5s7.5 2.5 7.5 6.5" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg>Профиль</button>
   </div>
 </nav>
@@ -473,8 +620,11 @@ label.f{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--mu
   <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title">
     <div class="sheet-top"><h3 id="sheet-title">Новая тренировка</h3><button class="x" data-close type="button" aria-label="Закрыть">×</button></div>
     <label class="f">Дата<input class="inp" type="date" id="f-date"></label>
+    <div class="tpl-bar" id="ed-tpl" hidden><span class="hint">Заполнить по шаблону</span><div class="chips" id="ed-tpl-chips"></div></div>
     <div id="rows" style="display:flex;flex-direction:column;gap:10px"></div>
     <button class="btn ghost" id="add-row" type="button">+ Упражнение</button>
+    <button class="link" id="tpl-save-open" type="button" style="align-self:flex-start">Сохранить как шаблон</button>
+    <div class="inline-form" id="tpl-save-form" hidden><input class="inp" id="tpl-name" placeholder="Например, Грудь и бицепс" maxlength="40"><button class="btn sm" id="tpl-save" type="button">Сохранить</button></div>
     <div class="err" id="f-err" hidden></div>
     <div class="sheet-actions">
       <button class="btn" id="save" type="button">Сохранить</button>
@@ -493,6 +643,47 @@ label.f{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--mu
     <div id="paste-preview" class="pv" hidden></div>
     <div class="err" id="paste-err" hidden></div>
     <button class="btn" id="paste-save" type="button" hidden>Добавить в дневник</button>
+  </div>
+</div>
+
+<!-- plates calculator -->
+<div class="sheet-bg" id="plates" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="plates-title">
+    <div class="sheet-top"><h3 id="plates-title">Калькулятор блинов</h3><button class="x" data-close type="button" aria-label="Закрыть">×</button></div>
+    <div class="row-nums" style="grid-template-columns:1fr 1fr">
+      <label class="f">Нужный вес, кг<input class="inp mono" id="pc-target" inputmode="decimal" value="60"></label>
+      <label class="f">Гриф<select class="inp" id="pc-bar"><option value="20">Олимпийский 20 кг</option><option value="15">Женский 15 кг</option><option value="10">Лёгкий 10 кг</option><option value="0">Тренажёр (без грифа)</option></select></label>
+    </div>
+    <div class="f" style="font-size:12px;color:var(--muted)">Блины, которые есть в зале — нажмите, чтобы убрать<div class="pl-chips" id="pc-avail" style="margin-top:6px"></div></div>
+    <div class="card bar-viz" id="pc-viz"></div>
+    <div class="plates-out" id="pc-out"></div>
+  </div>
+</div>
+
+<!-- body entry -->
+<div class="sheet-bg" id="bsheet" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="bsheet-title">
+    <div class="sheet-top"><h3 id="bsheet-title">Замер</h3><button class="x" data-close type="button" aria-label="Закрыть">×</button></div>
+    <div class="row-nums" style="grid-template-columns:1fr 1fr">
+      <label class="f">Дата<input class="inp" type="date" id="b-date"></label>
+      <label class="f">Вес тела, кг<input class="inp mono" id="b-weight" inputmode="decimal" placeholder="75,5"></label>
+      <label class="f">Талия, см<input class="inp mono" id="b-waist" inputmode="decimal"></label>
+      <label class="f">Грудь, см<input class="inp mono" id="b-chest" inputmode="decimal"></label>
+      <label class="f">Бицепс, см<input class="inp mono" id="b-arm" inputmode="decimal"></label>
+      <label class="f">Бёдра, см<input class="inp mono" id="b-hip" inputmode="decimal"></label>
+    </div>
+    <div class="photo-in"><img id="b-photo-prev" alt="" hidden><label class="btn ghost sm" style="cursor:pointer">Добавить фото<input type="file" id="b-photo" accept="image/*" hidden></label><button class="link" type="button" id="b-photo-rm" hidden>Убрать фото</button></div>
+    <p class="hint" style="margin:0">Заполните только то, что меряли. Фото сжимается и хранится только на этом телефоне.</p>
+    <div class="err" id="b-err" hidden></div>
+    <div class="sheet-actions"><button class="btn" id="b-save" type="button">Сохранить</button><button class="btn danger" id="b-del" type="button" hidden>Удалить замер</button></div>
+  </div>
+</div>
+
+<!-- compare with friend -->
+<div class="sheet-bg" id="cmp" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="cmp-title">
+    <div class="sheet-top"><h3 id="cmp-title">Сравнение</h3><button class="x" data-close type="button" aria-label="Закрыть">×</button></div>
+    <div id="cmp-body" style="display:flex;flex-direction:column;gap:16px"></div>
   </div>
 </div>
 

@@ -1,6 +1,6 @@
 // Офлайн-режим: сам дневник берётся из сети, если она есть (так приходят обновления), иначе из кэша.
 // Шрифты кэшируются при первом открытии и дальше грузятся с телефона.
-const CACHE = 'dnevnik-zala-v3';
+const CACHE = 'dnevnik-zala-v4';
 const CORE = ['./', './index.html', './app.js', './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png', './icons/apple-touch-icon.png'];
 
 self.addEventListener('install', e => {
@@ -20,7 +20,7 @@ self.addEventListener('fetch', e => {
   if (req.method !== 'GET') return;
   const url = new URL(req.url);
 
-  if (url.hostname === 'fonts.googleapis.com' || url.hostname === 'fonts.gstatic.com') {
+  if (url.hostname === 'fonts.googleapis.com' || url.hostname === 'fonts.gstatic.com' || url.hostname === 'cdnjs.cloudflare.com') {
     e.respondWith(
       caches.match(req).then(hit => hit || fetch(req).then(res => {
         const copy = res.clone();
