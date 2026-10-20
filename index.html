@@ -147,7 +147,24 @@ h2{font-family:var(--f-display);font-weight:500;font-size:17px;margin:0;letter-s
 /* bottom bar */
 .bar{position:fixed;left:0;right:0;bottom:0;padding:12px max(16px,env(safe-area-inset-right,0px)) calc(12px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));
   background:linear-gradient(to top,var(--bg) 60%,transparent);display:flex;justify-content:center;z-index:5}
+.bar-in{display:flex;gap:8px;width:100%;max-width:720px}
+.bar-in .btn{flex:1}
+.bar-in .btn.side{flex:none;width:auto;background:var(--surface)}
 .btn{border:0;border-radius:12px;padding:14px 20px;font-weight:600;background:var(--accent);color:var(--accent-ink);width:100%;max-width:720px;font-size:16px}
+.area{font-family:var(--f-mono);font-size:15px;line-height:1.5;resize:vertical;min-height:180px}
+.pv{display:flex;flex-direction:column;gap:10px}
+.pv-wk{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px;display:flex;flex-direction:column;gap:10px}
+.pv-wk.bad{border-color:var(--down)}
+.pv-date{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.pv-date .inp{width:auto;flex:1;min-width:150px}
+.pv-note{font-size:12px;color:var(--down)}
+.pv-it{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 10px;align-items:center;padding-top:10px;border-top:1px solid var(--line)}
+.pv-it .raw{grid-column:1/-1;font-size:12px;color:var(--muted);font-family:var(--f-mono);overflow-wrap:anywhere}
+.pv-it select{font-size:15px;padding:8px 10px}
+.pv-it .v{font-family:var(--f-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+.pv-skip{font-size:13px;color:var(--muted)}
+.pv-skip b{color:var(--down);font-weight:600}
+.new-tag{font-size:11px;color:var(--muted)}
 .btn.sm{width:auto;padding:9px 14px;font-size:14px}
 .btn.ghost{background:var(--soft);color:var(--ink);border:1px solid var(--line)}
 .btn.danger{background:transparent;color:var(--down);border:1px solid var(--line)}
@@ -238,7 +255,20 @@ label.f{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--mu
   </section>
 </div>
 
-<div class="bar" id="bar"><button class="btn" id="add" type="button">Записать тренировку</button></div>
+<div class="bar" id="bar"><div class="bar-in"><button class="btn" id="add" type="button">Записать тренировку</button><button class="btn ghost side" id="paste-open" type="button">Из заметок</button></div></div>
+
+<!-- paste from notes -->
+<div class="sheet-bg" id="paste" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="paste-title">
+    <div class="sheet-top"><h3 id="paste-title">Из заметок</h3><button class="x" data-close type="button" aria-label="Закрыть">×</button></div>
+    <p class="hint" style="margin:0">Вставьте текст как есть: строка с датой, под ней упражнения. Можно сразу несколько тренировок.</p>
+    <textarea class="inp area" id="paste-text" rows="9" placeholder="6.10.26&#10;Жим гориз 50 на 6&#10;Жим гант накл 18 на 10&#10;Сидя молот гант по 10кг&#10;&#10;13.10.26&#10;Жим гориз 50 на 8 3 подхода"></textarea>
+    <button class="btn ghost" id="paste-parse" type="button">Разобрать текст</button>
+    <div id="paste-preview" class="pv" hidden></div>
+    <div class="err" id="paste-err" hidden></div>
+    <button class="btn" id="paste-save" type="button" hidden>Добавить в дневник</button>
+  </div>
+</div>
 
 <!-- workout editor -->
 <div class="sheet-bg" id="sheet" hidden>
@@ -344,18 +374,19 @@ const SEED = [
 ];
 let mine = [];
 let owner = '';
+let aliases = {};          // сокращение из заметок → название упражнения в дневнике
 let view = null;           // {owner, workouts} when looking at someone's shared link
 let workouts = [];         // what is on screen
 const open = new Set();
 
 function load(){
   const raw = ls.get(STORE);
-  if (raw) { try { const o = JSON.parse(raw); mine = Array.isArray(o.workouts) ? o.workouts : []; owner = o.owner || ''; return; } catch (e) {} }
+  if (raw) { try { const o = JSON.parse(raw); mine = Array.isArray(o.workouts) ? o.workouts : []; owner = o.owner || ''; aliases = o.aliases || {}; return; } catch (e) {} }
   mine = SEED.map(w => ({...w, items: w.items.map(i => ({...i}))}));
   persist();
 }
 function persist(){
-  if (!ls.set(STORE, JSON.stringify({v: 1, owner, workouts: mine}))) toast('Не удалось сохранить на телефоне. Проверьте свободное место.');
+  if (!ls.set(STORE, JSON.stringify({v: 1, owner, aliases, workouts: mine}))) toast('Не удалось сохранить на телефоне. Проверьте свободное место.');
 }
 function cleanItem(i){
   const n = v => (typeof v === 'number' && isFinite(v)) ? v : null;
@@ -538,7 +569,123 @@ document.addEventListener('click', ev => {
 });
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSheets(); });
 function openSheetEl(id){ $(id).hidden = false; document.body.style.overflow = 'hidden'; }
-function closeSheets(){ $('#sheet').hidden = true; $('#share').hidden = true; document.body.style.overflow = ''; editing = null; }
+function closeSheets(){ $('#sheet').hidden = true; $('#share').hidden = true; $('#paste').hidden = true; document.body.style.overflow = ''; editing = null; }
+
+/* ---------- paste from notes ---------- */
+const STOP = ['по', 'с', 'на', 'и', 'в', 'со'];
+const norm = s => String(s || '').toLowerCase().replace(/ё/g, 'е').replace(/[^a-zа-я0-9\s]/g, ' ').split(/\s+/).filter(w => w && !STOP.includes(w));
+function guessGroup(n){
+  const s = n.toLowerCase();
+  if (/трицеп|франц|разгиб|брусь/.test(s)) return 'Трицепс';
+  if (/сгиб|молот|бицеп|супинац/.test(s)) return 'Бицепс';
+  if (/тяг|подтяг|спин|гиперэкст/.test(s)) return 'Спина';
+  if (/присед|выпад|ног|икр|бедр|ягод/.test(s)) return 'Ноги';
+  if (/мах|плеч|армейск|дельт/.test(s)) return 'Плечи';
+  if (/пресс|скруч|планк/.test(s)) return 'Пресс';
+  if (/жим|развед|бабоч|кроссов|груд|отжим/.test(s)) return 'Грудь';
+  return 'Другое';
+}
+function matchKnown(raw, known){
+  const w = norm(raw), wk = w.join(' ');
+  if (!w.length) return null;
+  if (aliases[wk] && known.includes(aliases[wk])) return aliases[wk];
+  let best = null;
+  for (const k of known) {
+    const kw = norm(k);
+    if (kw.join(' ') === wk) return k;
+    let j = 0, ok = true;
+    for (const x of w) { while (j < kw.length && !kw[j].startsWith(x)) j++; if (j >= kw.length) { ok = false; break; } j++; }
+    if (ok && (!best || kw.length < norm(best).length)) best = k;
+  }
+  return best;
+}
+function parseDateLine(s){
+  const m = s.match(/^(\d{1,2})[.\/](\d{1,2})(?:[.\/](\d{2,4}))?(?=\s|$|[:,])/);
+  if (!m) return null;
+  const d = +m[1], mo = +m[2];
+  let y = m[3] ? +m[3] : null; if (y != null && y < 100) y += 2000;
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  if (y == null) { y = today.getFullYear(); const t = new Date(y, mo - 1, d); if (t > today) y--; }
+  const dt = new Date(y, mo - 1, d);
+  const ok = mo >= 1 && mo <= 12 && dt.getDate() === d && dt.getMonth() === mo - 1;
+  return {raw: m[0], date: ok ? iso(dt) : ''};
+}
+function parseExLine(s){
+  const m = s.match(/^(.*?)(?:\s+по)?\s+(\d+(?:[.,]\d+)?)\s*(?:кг)?(.*)$/i);
+  if (!m) return null;
+  const name = m[1].replace(/\s+(по|с весом|вес)$/i, '').trim();
+  if (!name || !/[a-zа-яё]/i.test(name)) return null;
+  const rest = m[3] || '';
+  let reps = null, repsMax = null, sets = null;
+  const r = rest.match(/(?:на|x|х|×|\*)\s*(\d+)(?:\s*[-–—]\s*(\d+))?/i);
+  if (r) { reps = +r[1]; if (r[2]) repsMax = +r[2]; }
+  const st = rest.match(/(\d+)\s*подх/i) || rest.match(/(?:на|x|х|×|\*)\s*\d+(?:\s*[-–—]\s*\d+)?\s*(?:x|х|×|\*)\s*(\d+)/i);
+  if (st) sets = +st[1];
+  return {raw: s, name, weight: parseFloat(m[2].replace(',', '.')), reps, repsMax, sets, perHand: /\sпо\s+\d/i.test(' ' + s) || /гант/i.test(name)};
+}
+function parseNotes(text){
+  const out = [], skipped = [];
+  let cur = null;
+  for (const line0 of text.split(/\r?\n/)) {
+    const line = line0.trim().replace(/\s+/g, ' ').replace(/^[•*\-–—]\s*/, '');
+    if (!line || /^[.\-–—_•*]+$/.test(line)) continue;
+    const dl = parseDateLine(line);
+    if (dl) { cur = {rawDate: dl.raw, date: dl.date, items: []}; out.push(cur); const tail = line.slice(dl.raw.length).trim(); if (tail && /\d/.test(tail)) { const ex = parseExLine(tail); if (ex) cur.items.push(ex); } continue; }
+    const ex = parseExLine(line);
+    if (!ex) { skipped.push(line); continue; }
+    if (!cur) { cur = {rawDate: '', date: '', items: []}; out.push(cur); }
+    cur.items.push(ex);
+  }
+  return {workouts: out.filter(w => w.items.length), skipped};
+}
+let parsed = null;
+function renderPreview(){
+  const box = $('#paste-preview');
+  const known = [...exercises(mine).values()].map(e => e.name);
+  let html = parsed.workouts.map((w, i) => {
+    const items = w.items.map((it, j) => {
+      const match = matchKnown(it.name, known);
+      it.choice = it.choice || (match ? 'k:' + match : 'n:');
+      const opts = [`<option value="n:"${it.choice === 'n:' ? ' selected' : ''}>Новое: ${esc(it.name)}</option>`]
+        .concat(known.map(k => `<option value="k:${esc(k)}"${it.choice === 'k:' + k ? ' selected' : ''}>${esc(k)}</option>`)).join('');
+      return `<div class="pv-it"><span class="raw">${esc(it.raw)}</span><select class="inp" id="p${i}-${j}" aria-label="Упражнение">${opts}</select><span class="v">${esc(setText(it))}</span></div>`;
+    }).join('');
+    const bad = !w.date;
+    return `<div class="pv-wk${bad ? ' bad' : ''}"><div class="pv-date"><input class="inp" type="date" id="p${i}-date" value="${w.date}" aria-label="Дата тренировки"><span class="hint">${w.items.length} упр.</span></div>${bad ? `<div class="pv-note">${w.rawDate ? 'Дата «' + esc(w.rawDate) + '» не похожа на настоящую — выберите правильную.' : 'Над упражнениями нет даты — выберите её.'}</div>` : ''}${items}</div>`;
+  }).join('');
+  if (parsed.skipped.length) html += `<div class="pv-skip"><b>Не разобрал ${parsed.skipped.length} стр.:</b> ${parsed.skipped.map(esc).join(' · ')}. Добавьте их вручную или поправьте текст и разберите снова.</div>`;
+  box.innerHTML = html; box.hidden = false;
+  $('#paste-save').hidden = !parsed.workouts.length;
+  $('#paste-save').textContent = 'Добавить в дневник: ' + parsed.workouts.length + ' трен.';
+}
+$('#paste-open').addEventListener('click', () => { parsed = null; $('#paste-preview').hidden = true; $('#paste-save').hidden = true; $('#paste-err').hidden = true; openSheetEl('#paste'); setTimeout(() => $('#paste-text').focus(), 50); });
+$('#paste-parse').addEventListener('click', () => {
+  parsed = parseNotes($('#paste-text').value);
+  $('#paste-err').hidden = true;
+  if (!parsed.workouts.length) { $('#paste-preview').hidden = true; $('#paste-save').hidden = true; const e = $('#paste-err'); e.textContent = 'Не нашёл упражнений. Нужны строки вида «Жим гориз 50 на 8», а над ними дата, например 6.10.26.'; e.hidden = false; return; }
+  renderPreview();
+});
+$('#paste-preview').addEventListener('change', e => {
+  const m = e.target.id.match(/^p(\d+)-(\d+)$/); if (m) parsed.workouts[+m[1]].items[+m[2]].choice = e.target.value;
+  const d = e.target.id.match(/^p(\d+)-date$/); if (d) { parsed.workouts[+d[1]].date = e.target.value; e.target.closest('.pv-wk').classList.toggle('bad', !e.target.value); }
+});
+$('#paste-save').addEventListener('click', () => {
+  if (parsed.workouts.some(w => !w.date)) { const e = $('#paste-err'); e.textContent = 'У одной из тренировок не выбрана дата — она выделена красным.'; e.hidden = false; return; }
+  const ex = exercises(mine);
+  const list = parsed.workouts.map(w => ({date: w.date, items: w.items.map(it => {
+    const known = it.choice.startsWith('k:') ? it.choice.slice(2) : null;
+    const k = known ? ex.get(key(known)) : null;
+    if (known && norm(it.name).join(' ') !== norm(known).join(' ')) aliases[norm(it.name).join(' ')] = known;
+    const out = {name: known || it.name, group: k ? k.group : guessGroup(it.name), weight: it.weight, reps: it.reps, perHand: k ? k.perHand : it.perHand};
+    if (it.repsMax) out.repsMax = it.repsMax;
+    if (it.sets) out.sets = it.sets;
+    return out;
+  })}));
+  const n = mergeIn(list);
+  persist(); closeSheets(); render();
+  $('#paste-text').value = '';
+  toast(n ? 'Добавлено тренировок: ' + n : 'Эти тренировки уже есть в дневнике');
+});
 
 /* ---------- editor ---------- */
 let editing = null, rows = [], delArmed = false;
